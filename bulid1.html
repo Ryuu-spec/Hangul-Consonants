@@ -8,35 +8,36 @@
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
-  body {
+  html, body {
+    width: 100%;
+    height: 100%;
     font-family: 'Nunito', sans-serif;
     background: #fbf6f1;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
+    overflow: hidden;
   }
 
   .container {
-    width: 100%;
-    max-width: 860px;
-    background: #fbf6f1;
-    border-radius: 20px;
-    padding: 24px;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: clamp(10px, 2vw, 24px);
+    gap: clamp(8px, 1.5vh, 18px);
   }
 
+  /* 제목 바 */
   .title-bar {
     background: white;
-    border-radius: 14px;
-    padding: 12px 20px;
+    border-radius: 100px;
+    padding: clamp(8px, 1.2vh, 12px) clamp(16px, 2.5vw, 28px);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 28px;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
   }
 
-  .title-bar h1 { font-size: 20px; font-weight: 800; letter-spacing: -0.3px; }
+  .title-bar h1 { font-size: clamp(15px, 2.2vw, 22px); font-weight: 800; }
   .title-bar h1 .black { color: #1a1a1a; }
   .title-bar h1 .blue  { color: #4A90D9; }
   .title-bar h1 .red   { color: #E03030; }
@@ -45,54 +46,110 @@
     background: #E03030;
     color: white;
     border-radius: 10px;
-    padding: 6px 18px;
-    font-size: 15px;
+    padding: clamp(4px, 0.7vh, 8px) clamp(12px, 1.8vw, 20px);
+    font-size: clamp(13px, 1.8vw, 17px);
     font-weight: 700;
   }
 
+  /* 게임 영역 */
   .game-area {
+    flex: 1;
     display: flex;
-    align-items: center;
-    gap: 20px;
+    align-items: stretch;
+    gap: clamp(10px, 1.8vw, 24px);
+    min-height: 0;
   }
 
-  .panel { background: white; border-radius: 16px; padding: 16px; }
+  /* 패널 박스 */
+  .panel {
+    background: white;
+    border-radius: clamp(12px, 1.8vw, 20px);
+    padding: clamp(10px, 1.5vw, 18px);
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    overflow: hidden;
+    min-height: 0;
+  }
 
   .panel-label {
-    font-size: 11px;
+    font-size: clamp(9px, 1vw, 12px);
     color: #bbb;
     text-align: center;
     letter-spacing: 0.08em;
-    margin-bottom: 12px;
-    font-weight: 600;
+    margin-bottom: clamp(6px, 1vh, 12px);
+    font-weight: 700;
+    flex-shrink: 0;
   }
 
   .consonant-panel { flex: 1; }
-  .vowel-panel     { flex: 1.4; }
+  .vowel-panel     { flex: 1.8; }
 
-  .consonant-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .vowel-grid     { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-
-  .card {
-    background: #fbf6f1;
-    border-radius: 12px;
-    padding: 18px 0;
-    text-align: center;
-    font-size: 26px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: transform 0.1s, background 0.15s, border-color 0.15s;
-    user-select: none;
+  .consonant-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(6px, 1vw, 14px);
+    min-height: 0;
   }
 
-  .consonant-card { border: 2px solid #4A90D9; color: #1a1a1a; }
-  .vowel-card     { font-size: 22px; padding: 14px 0; border: 2px solid #E03030; color: #E03030; }
+  .vowel-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: clamp(5px, 0.8vw, 12px);
+    min-height: 0;
+  }
 
-  .card:hover  { transform: scale(1.05); }
+  /* 카드 — 그리드 셀에 꽉 차게 */
+  .card {
+    background: white;
+    border-radius: clamp(8px, 1vw, 14px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.15s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    user-select: none;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    font-weight: 800;
+    line-height: 1;
+    width: 100%;
+    height: 100%;
+    /* 글자 크기를 카드 높이 기준으로 */
+    font-size: min(6vw, 8vh, 56px);
+  }
+
+  .consonant-card {
+    border: clamp(2px, 0.3vw, 4px) solid #4A90D9;
+    color: #1a1a1a;
+  }
+
+  .vowel-card {
+    border: clamp(2px, 0.3vw, 4px) solid #E03030;
+    color: #E03030;
+    font-size: min(5vw, 7vh, 48px);
+  }
+
+  .card:hover:not(.correct-flash):not(.wrong-flash) {
+    transform: scale(1.06);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+    z-index: 1;
+  }
+
   .card:active { transform: scale(0.97); }
 
-  .card.selected-c { background: #DDEEFF; border-color: #2a70c9; }
-  .card.selected-v { background: #FFEEEE; border-color: #c02020; }
+  .card.selected-c {
+    background: #d6ebf5;
+    border-color: #2a70c9;
+    box-shadow: 0 0 0 3px rgba(74,144,217,0.3);
+  }
+
+  .card.selected-v {
+    background: #fde8e8;
+    border-color: #c02020;
+    box-shadow: 0 0 0 3px rgba(224,48,48,0.3);
+  }
 
   .card.correct-flash {
     background: #d4f5e2 !important;
@@ -121,49 +178,55 @@
     80%     { transform: translateX(4px); }
   }
 
+  /* 중앙 음절 */
   .center-area {
     flex: 0 0 auto;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 14px;
+    justify-content: center;
+    gap: clamp(8px, 1.5vh, 16px);
+    width: clamp(100px, 14vw, 155px);
   }
 
   .syllable-card {
     background: white;
-    border: 2.5px solid #888;
-    border-radius: 18px;
-    width: 120px;
-    height: 140px;
+    border: clamp(2px, 0.4vw, 4px) solid #888;
+    border-radius: clamp(12px, 1.8vw, 20px);
+    width: clamp(90px, 12vw, 145px);
+    height: clamp(100px, 14vw, 160px);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 72px;
+    font-size: min(9vw, 12vh, 90px);
     font-weight: 800;
     color: #1a1a1a;
     cursor: pointer;
     transition: border-color 0.2s;
     position: relative;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
   }
 
   .syllable-card::after {
     content: '🔊';
     position: absolute;
-    bottom: 8px;
-    right: 10px;
-    font-size: 14px;
-    opacity: 0.4;
+    bottom: 6px;
+    right: 8px;
+    font-size: clamp(10px, 1.2vw, 14px);
+    opacity: 0.35;
   }
 
-  .syllable-card:hover::after { opacity: 0.8; }
+  .syllable-card:hover::after { opacity: 0.75; }
 
   .syllable-card.correct-glow {
     border-color: #2eaa6a;
+    box-shadow: 0 0 0 4px rgba(46,170,106,0.25);
     animation: syllablePop 0.5s ease;
   }
 
   .syllable-card.wrong-glow {
     border-color: #E03030;
+    box-shadow: 0 0 0 4px rgba(224,48,48,0.2);
     animation: syllableShake 0.4s ease;
   }
 
@@ -180,22 +243,23 @@
   }
 
   .hint-text {
-    font-size: 12px;
+    font-size: clamp(9px, 1vw, 12px);
     color: #bbb;
     font-weight: 600;
-    letter-spacing: 0.02em;
+    text-align: center;
   }
 
+  /* 진행 도트 */
   .progress-dots {
     display: flex;
     justify-content: center;
-    gap: 8px;
-    margin-top: 24px;
+    gap: clamp(5px, 0.8vw, 10px);
+    flex-shrink: 0;
   }
 
   .dot {
-    width: 30px;
-    height: 6px;
+    width: clamp(20px, 3vw, 32px);
+    height: clamp(4px, 0.6vh, 6px);
     background: #ddd;
     border-radius: 3px;
     transition: background 0.3s;
@@ -204,28 +268,29 @@
   .dot.active { background: #E03030; }
   .dot.done   { background: #4A90D9; }
 
+  /* 결과 화면 */
   .result-screen {
     display: none;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 40px 20px;
+    flex: 1;
     text-align: center;
-    gap: 20px;
+    gap: clamp(12px, 2vh, 24px);
   }
 
   .result-screen.show { display: flex; }
-  .result-emoji  { font-size: 60px; }
-  .result-title  { font-size: 28px; font-weight: 800; color: #1a1a1a; }
-  .result-score  { font-size: 18px; color: #666; }
+  .result-emoji { font-size: clamp(40px, 6vw, 70px); }
+  .result-title { font-size: clamp(20px, 3vw, 32px); font-weight: 800; color: #1a1a1a; }
+  .result-score { font-size: clamp(14px, 2vw, 20px); color: #666; }
 
   .retry-btn {
     background: #E03030;
     color: white;
     border: none;
     border-radius: 12px;
-    padding: 14px 40px;
-    font-size: 16px;
+    padding: clamp(10px, 1.5vh, 16px) clamp(24px, 4vw, 44px);
+    font-size: clamp(13px, 1.8vw, 18px);
     font-weight: 700;
     cursor: pointer;
     font-family: 'Nunito', sans-serif;
@@ -298,7 +363,6 @@ const SYLLABLE_MAP = {
   'ㄹ': {'ㅏ':'라','ㅓ':'러','ㅗ':'로','ㅜ':'루','ㅡ':'르','ㅣ':'리','ㅔ':'레','ㅐ':'래'}
 };
 
-// 오디오 파일명 매핑
 const AUDIO_MAP = {
   '아':'a',  '어':'eo', '오':'o',  '우':'u',
   '으':'eu', '이':'i',  '에':'e',  '애':'ae',
@@ -311,8 +375,6 @@ const AUDIO_MAP = {
 };
 
 const AUDIO_BASE = 'https://ryuu-spec.github.io/Hangul-Consonants/bagic1/';
-
-// 오디오 캐시 (preload)
 const audioCache = {};
 
 function preloadAudio() {
@@ -332,7 +394,6 @@ function playSyllable(syllable) {
 }
 
 let currentSyllable = '';
-
 function playCurrentSyllable() {
   if (currentSyllable) playSyllable(currentSyllable);
 }
@@ -436,7 +497,6 @@ function loadQuestion() {
   sc.textContent = syllable;
   sc.className = 'syllable-card';
 
-  // 음절 자동 재생
   setTimeout(() => playSyllable(syllable), 200);
 
   document.querySelectorAll('.card').forEach(el => {
@@ -449,7 +509,6 @@ function loadQuestion() {
 
 function selectCard(type, value) {
   if (checking) return;
-
   if (type === 'consonant' && selected.consonant) {
     const prev = document.getElementById(`c-${selected.consonant}`);
     if (prev) prev.classList.remove('selected-c');
@@ -458,11 +517,9 @@ function selectCard(type, value) {
     const prev = document.getElementById(`v-${selected.vowel}`);
     if (prev) prev.classList.remove('selected-v');
   }
-
   selected[type] = value;
   const el = document.getElementById(type === 'consonant' ? `c-${value}` : `v-${value}`);
   el.classList.add(type === 'consonant' ? 'selected-c' : 'selected-v');
-
   if (selected.consonant && selected.vowel) checkAnswer();
 }
 
@@ -483,19 +540,11 @@ function checkAnswer() {
     });
     sc.className = 'syllable-card correct-glow';
     setTimeout(() => { current++; loadQuestion(); }, 800);
-
   } else {
     playWrongSound();
-    if (selected.consonant !== q.c) {
-      cEl.classList.remove('selected-c');
-      cEl.classList.add('wrong-flash');
-    }
-    if (selected.vowel !== q.v) {
-      vEl.classList.remove('selected-v');
-      vEl.classList.add('wrong-flash');
-    }
+    if (selected.consonant !== q.c) { cEl.classList.remove('selected-c'); cEl.classList.add('wrong-flash'); }
+    if (selected.vowel !== q.v)     { vEl.classList.remove('selected-v'); vEl.classList.add('wrong-flash'); }
     sc.className = 'syllable-card wrong-glow';
-
     setTimeout(() => {
       if (selected.consonant !== q.c) { cEl.classList.remove('wrong-flash'); selected.consonant = null; }
       if (selected.vowel !== q.v)     { vEl.classList.remove('wrong-flash'); selected.vowel = null; }
