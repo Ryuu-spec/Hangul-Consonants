@@ -12,13 +12,14 @@
   .container {
     width: 100vw; height: 100vh;
     display: flex; flex-direction: column;
-    padding: clamp(10px, 2vw, 24px);
-    gap: clamp(8px, 1.5vh, 18px);
+    padding: clamp(10px,2vw,24px);
+    gap: clamp(8px,1.5vh,16px);
   }
 
+  /* 제목 바 */
   .title-bar {
     background: white; border-radius: 100px;
-    padding: clamp(18px,2.8vh,28px) clamp(16px,2.5vw,28px);
+    padding: clamp(14px,2vh,22px) clamp(16px,2.5vw,28px);
     display: flex; justify-content: space-between; align-items: center;
     flex-shrink: 0; box-shadow: 0 2px 8px rgba(0,0,0,0.04);
   }
@@ -29,43 +30,81 @@
   .title-bar h1 .gray  { color: #888; font-weight: 600; }
   .timer {
     background: #E03030; color: white; border-radius: 10px;
-    padding: clamp(4px,0.7vh,8px) clamp(12px,1.8vw,20px);
-    font-size: clamp(13px,1.8vw,17px); font-weight: 700; letter-spacing: 0.05em;
+    padding: clamp(6px,0.9vh,10px) clamp(14px,2vw,22px);
+    font-size: clamp(14px,1.8vw,18px); font-weight: 700; letter-spacing: 0.05em;
   }
 
+  /* 게임 영역 */
   .game-area {
-    flex: 1; display: flex; align-items: center;
-    justify-content: center; gap: clamp(12px,2vw,28px); min-height: 0; height: 100%; padding: 0 clamp(40px,8vw,160px);
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: clamp(10px,2vh,24px); min-height: 0;
   }
 
+  /* 음절 카드 - 위 중앙 */
+  .syllable-card {
+    background: white; border: 2px solid #ccc;
+    border-radius: clamp(12px,1.5vw,18px);
+    width: clamp(90px,12vw,140px); height: clamp(90px,12vw,140px);
+    display: flex; align-items: center; justify-content: center;
+    font-size: clamp(52px,9vw,100px); font-weight: 800; color: #1a1a1a;
+    cursor: pointer; position: relative;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    transition: transform 0.1s;
+  }
+  .syllable-card:hover { transform: scale(1.04); }
+  .speaker-hint { position: absolute; bottom: 6px; right: 8px; font-size: clamp(10px,1.1vw,13px); opacity: 0.35; }
+  .syllable-card.correct-glow { border-color: #2eaa6a; color: #2eaa6a; animation: syllablePop 0.5s ease; }
+  .syllable-card.wrong-glow   { border-color: #E03030; color: #E03030; animation: syllableShake 0.4s ease; }
+
+  @keyframes syllablePop   { 0%{transform:scale(1)} 40%{transform:scale(1.1)} 100%{transform:scale(1)} }
+  @keyframes syllableShake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+
+  /* 분해 표시 */
+  .decompose {
+    display: flex; align-items: center; gap: clamp(4px,0.8vw,10px);
+    font-size: clamp(16px,2vw,24px); font-weight: 800;
+    opacity: 0; transition: opacity 0.3s; min-height: clamp(24px,3vh,36px);
+  }
+  .decompose.show { opacity: 1; }
+  .decompose .sep { color: #ccc; font-size: 0.7em; font-weight: 400; }
+
+  /* 카드 행 - 자음 + 모음 나란히 */
+  .cards-row {
+    display: flex; align-items: center;
+    gap: clamp(12px,2vw,28px);
+  }
+
+  /* 패널 */
   .panel {
     background: white; border-radius: clamp(12px,1.5vw,18px);
-    padding: clamp(18px,2.2vw,30px);
+    padding: clamp(12px,1.5vw,20px);
     display: flex; flex-direction: column; align-items: center;
-    justify-content: center;
-    gap: clamp(8px,1vh,14px);
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05); flex-shrink: 0; overflow: hidden;
+    gap: clamp(8px,1vh,12px);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
   }
   .panel-label { font-size: clamp(9px,0.9vw,12px); font-weight: 700; letter-spacing: 0.08em; }
   .consonant-label { color: #4A90D9; }
   .vowel-label     { color: #E03030; }
 
-  .consonant-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(12px,1.5vw,18px); }
-  .vowel-grid     { display: grid; grid-template-columns: repeat(4,1fr); gap: clamp(8px,1vw,14px); max-width: 100%; }
+  .consonant-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(8px,1vw,12px); }
+  .vowel-grid     { display: grid; grid-template-columns: repeat(4,1fr); gap: clamp(8px,1vw,12px); }
 
+  /* 카드 */
   .card {
-    background: white; border-radius: clamp(10px,1.2vw,16px);
+    background: white; border-radius: clamp(8px,1vw,14px);
     display: flex; align-items: center; justify-content: center;
     cursor: pointer;
     transition: all 0.15s cubic-bezier(0.68,-0.55,0.265,1.55);
-    user-select: none; font-weight: 800;
-    width: clamp(76px,9vw,112px); height: clamp(76px,9vw,112px);
-    font-size: clamp(32px,4.8vw,62px);
+    user-select: none; font-weight: 800; color: #1a1a1a;
+    width: clamp(60px,7vw,90px); height: clamp(60px,7vw,90px);
+    font-size: clamp(24px,3.5vw,46px);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
   }
-  .consonant-card { border: 1.5px solid #4A90D9; color: #1a1a1a; }
-  .vowel-card     { border: 1.5px solid #E03030; color: #1a1a1a; font-size: clamp(32px,4.8vw,62px); }
+  .consonant-card { border: 1.5px solid #4A90D9; }
+  .vowel-card     { border: 1.5px solid #E03030; }
 
-  .card:hover:not(.correct-flash):not(.wrong-flash) { transform: scale(1.08) translateY(-2px); box-shadow: 0 6px 14px rgba(0,0,0,0.1); z-index:1; }
+  .card:hover:not(.correct-flash):not(.wrong-flash) { transform: scale(1.08) translateY(-2px); box-shadow: 0 6px 14px rgba(0,0,0,0.1); }
   .card:active { transform: scale(0.97); }
   .card.selected-c { background: #d6ebf5; border-color: #2a70c9; }
   .card.selected-v { background: #fde8e8; border-color: #c02020; }
@@ -75,39 +114,13 @@
   @keyframes correctPop { 0%{transform:scale(1)} 40%{transform:scale(1.14)} 100%{transform:scale(1)} }
   @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-7px)} 40%{transform:translateX(7px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
 
-  .center-area {
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    gap: clamp(8px,1.5vh,14px);
-    flex: 1;
-  }
-
-  .syllable-char {
-    font-size: clamp(80px,14vw,160px); font-weight: 800;
-    color: #1a1a1a; line-height: 1; cursor: pointer;
-    transition: transform 0.1s; position: relative; display: inline-block;
-  }
-  .syllable-char:hover { transform: scale(1.05); }
-  .speaker-hint { position: absolute; bottom: -2px; right: -14px; font-size: clamp(10px,1.2vw,14px); opacity: 0.35; }
-  .syllable-char.correct-glow { animation: syllablePop 0.5s ease; color: #2eaa6a; }
-  .syllable-char.wrong-glow   { animation: syllableShake 0.4s ease; color: #E03030; }
-
-  @keyframes syllablePop   { 0%{transform:scale(1)} 40%{transform:scale(1.1)} 100%{transform:scale(1)} }
-  @keyframes syllableShake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
-
-  .decompose {
-    display: flex; align-items: center; gap: clamp(4px,0.8vw,8px);
-    font-size: clamp(16px,2vw,24px); font-weight: 800;
-    opacity: 0; transition: opacity 0.3s; min-height: clamp(28px,4vh,40px);
-  }
-  .decompose.show { opacity: 1; }
-  .decompose .sep { color: #ccc; font-size: 0.7em; font-weight: 400; }
-
+  /* 진행 도트 */
   .progress-dots { display: flex; justify-content: center; gap: clamp(5px,0.8vw,10px); flex-shrink: 0; }
   .dot { width: clamp(20px,3vw,32px); height: clamp(4px,0.6vh,6px); background: #ddd; border-radius: 3px; transition: background 0.3s; }
   .dot.active { background: #E03030; }
   .dot.done   { background: #4A90D9; }
 
+  /* 결과 화면 */
   .result-screen { display: none; flex-direction: column; align-items: center; justify-content: center; flex: 1; text-align: center; gap: clamp(12px,2vh,24px); }
   .result-screen.show { display: flex; }
   .result-emoji { font-size: clamp(40px,6vw,70px); }
@@ -129,24 +142,36 @@
 </head>
 <body>
 <div class="container">
+
   <div class="title-bar">
-    <h1><span class="black">Hangul </span><span class="blue">Basic </span><span class="red">Consonants</span><span class="gray"> — Break</span></h1>
+    <h1><span class="black">Break — Find the </span><span class="blue">consonant</span><span class="black"> &amp; </span><span class="red">vowel</span></h1>
     <div class="timer" id="timer">00:00</div>
   </div>
+
   <div class="game-area" id="gameArea">
-    <div class="panel">
-      <div class="panel-label consonant-label">CONSONANT</div>
-      <div class="consonant-grid" id="consonantGrid"></div>
-    </div>
-    <div class="center-area">
-      <div class="syllable-char" id="syllableChar" onclick="playCurrentSyllable()">?<span class="speaker-hint">🔊</span></div>
+
+    <!-- 음절 카드 위 중앙 -->
+    <div style="display:flex; flex-direction:column; align-items:center; gap:clamp(6px,1vh,12px);">
+      <div class="syllable-card" id="syllableChar" onclick="playCurrentSyllable()">
+        ?<span class="speaker-hint">🔊</span>
+      </div>
       <div class="decompose" id="decomposeRow"></div>
     </div>
-    <div class="panel">
-      <div class="panel-label vowel-label">VOWEL</div>
-      <div class="vowel-grid" id="vowelGrid"></div>
+
+    <!-- 자음 + 모음 카드 아래 -->
+    <div class="cards-row">
+      <div class="panel">
+        <div class="panel-label consonant-label">CONSONANT</div>
+        <div class="consonant-grid" id="consonantGrid"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-label vowel-label">VOWEL</div>
+        <div class="vowel-grid" id="vowelGrid"></div>
+      </div>
     </div>
+
   </div>
+
   <div class="result-screen" id="resultScreen">
     <div class="result-emoji">🎉</div>
     <div class="result-title">Well done!</div>
@@ -154,8 +179,10 @@
     <div class="result-time"  id="resultTime"></div>
     <button class="retry-btn" onclick="startGame()">Try Again</button>
   </div>
+
   <div class="progress-dots" id="progressDots"></div>
 </div>
+
 <script>
 const CONSONANTS=['ㅇ','ㄴ','ㅁ','ㄹ'];
 const VOWELS=['ㅏ','ㅓ','ㅗ','ㅜ','ㅡ','ㅣ','ㅔ','ㅐ'];
@@ -190,9 +217,9 @@ function generateQuestions(){const all=[];CONSONANTS.forEach(c=>VOWELS.forEach(v
 function buildCards(){document.getElementById('consonantGrid').innerHTML=CONSONANTS.map(c=>`<div class="card consonant-card" id="c-${c}" onclick="handleClick('consonant','${c}')">${c}</div>`).join('');document.getElementById('vowelGrid').innerHTML=VOWELS.map(v=>`<div class="card vowel-card" id="v-${v}" onclick="handleClick('vowel','${v}')">${v}</div>`).join('');}
 function buildDots(){document.getElementById('progressDots').innerHTML=Array.from({length:TOTAL},(_,i)=>`<div class="dot" id="dot-${i}"></div>`).join('');}
 function updateDots(){for(let i=0;i<TOTAL;i++){const d=document.getElementById(`dot-${i}`);d.className='dot'+(i<current?' done':i===current?' active':'');}}
-function loadQuestion(){if(current>=TOTAL){showResult();return;}const q=questions[current];selected={consonant:null,vowel:null};checking=false;const syllable=SYLLABLE_MAP[q.c][q.v];currentSyllable=syllable;const sc=document.getElementById('syllableChar');sc.childNodes[0].textContent=syllable;sc.className='syllable-char';const dr=document.getElementById('decomposeRow');dr.innerHTML='';dr.classList.remove('show');setTimeout(()=>playSyllable(syllable),200);document.querySelectorAll('.card').forEach(el=>{el.className=el.className.replace(/\s*(selected-[cv]|correct-flash|wrong-flash)/g,'').trim();});updateDots();}
+function loadQuestion(){if(current>=TOTAL){showResult();return;}const q=questions[current];selected={consonant:null,vowel:null};checking=false;const syllable=SYLLABLE_MAP[q.c][q.v];currentSyllable=syllable;const sc=document.getElementById('syllableChar');sc.childNodes[0].textContent=syllable;sc.className='syllable-card';const dr=document.getElementById('decomposeRow');dr.innerHTML='';dr.classList.remove('show');setTimeout(()=>playSyllable(syllable),200);document.querySelectorAll('.card').forEach(el=>{el.className=el.className.replace(/\s*(selected-[cv]|correct-flash|wrong-flash)/g,'').trim();});updateDots();}
 function handleClick(type,value){if(!gameStarted)startTimer();if(checking)return;if(type==='consonant'&&selected.consonant){const prev=document.getElementById(`c-${selected.consonant}`);if(prev)prev.classList.remove('selected-c');}if(type==='vowel'&&selected.vowel){const prev=document.getElementById(`v-${selected.vowel}`);if(prev)prev.classList.remove('selected-v');}selected[type]=value;const el=document.getElementById(type==='consonant'?`c-${value}`:`v-${value}`);el.classList.add(type==='consonant'?'selected-c':'selected-v');if(selected.consonant&&selected.vowel)checkAnswer();}
-function checkAnswer(){checking=true;const q=questions[current];const cEl=document.getElementById(`c-${selected.consonant}`);const vEl=document.getElementById(`v-${selected.vowel}`);const sc=document.getElementById('syllableChar');if(selected.consonant===q.c&&selected.vowel===q.v){correct++;playCorrectSound();playSyllable(SYLLABLE_MAP[q.c][q.v]);[cEl,vEl].forEach(el=>{el.classList.remove('selected-c','selected-v');el.classList.add('correct-flash');});sc.className='syllable-char correct-glow';const dr=document.getElementById('decomposeRow');dr.innerHTML=`<span style="color:#1a1a1a;">${q.c}</span><span class="sep">+</span><span style="color:#E03030;">${q.v}</span><span class="sep">=</span><span style="color:#1a1a1a;">${SYLLABLE_MAP[q.c][q.v]}</span>`;dr.classList.add('show');setTimeout(()=>{current++;loadQuestion();},900);}else{playWrongSound();if(selected.consonant!==q.c){cEl.classList.remove('selected-c');cEl.classList.add('wrong-flash');}if(selected.vowel!==q.v){vEl.classList.remove('selected-v');vEl.classList.add('wrong-flash');}sc.className='syllable-char wrong-glow';setTimeout(()=>{if(selected.consonant!==q.c){cEl.classList.remove('wrong-flash');selected.consonant=null;}if(selected.vowel!==q.v){vEl.classList.remove('wrong-flash');selected.vowel=null;}sc.className='syllable-char';checking=false;},450);}}
+function checkAnswer(){checking=true;const q=questions[current];const cEl=document.getElementById(`c-${selected.consonant}`);const vEl=document.getElementById(`v-${selected.vowel}`);const sc=document.getElementById('syllableChar');if(selected.consonant===q.c&&selected.vowel===q.v){correct++;playCorrectSound();playSyllable(SYLLABLE_MAP[q.c][q.v]);[cEl,vEl].forEach(el=>{el.classList.remove('selected-c','selected-v');el.classList.add('correct-flash');});sc.className='syllable-card correct-glow';const dr=document.getElementById('decomposeRow');dr.innerHTML=`<span style="color:#1a1a1a;">${q.c}</span><span class="sep">+</span><span style="color:#E03030;">${q.v}</span><span class="sep">=</span><span style="color:#1a1a1a;">${SYLLABLE_MAP[q.c][q.v]}</span>`;dr.classList.add('show');setTimeout(()=>{current++;loadQuestion();},900);}else{playWrongSound();if(selected.consonant!==q.c){cEl.classList.remove('selected-c');cEl.classList.add('wrong-flash');}if(selected.vowel!==q.v){vEl.classList.remove('selected-v');vEl.classList.add('wrong-flash');}sc.className='syllable-card wrong-glow';setTimeout(()=>{if(selected.consonant!==q.c){cEl.classList.remove('wrong-flash');selected.consonant=null;}if(selected.vowel!==q.v){vEl.classList.remove('wrong-flash');selected.vowel=null;}sc.className='syllable-card';checking=false;},450);}}
 function showResult(){stopTimer();document.getElementById('gameArea').style.display='none';document.getElementById('resultScreen').classList.add('show');document.getElementById('resultScore').textContent=`You got ${correct} out of ${TOTAL} correct!`;const m=Math.floor(elapsedSeconds/60).toString().padStart(2,'0');const s=(elapsedSeconds%60).toString().padStart(2,'0');document.getElementById('resultTime').textContent=`Completed in ${m}:${s}`;updateDots();playCelebrationSound();createConfetti();}
 function startGame(){questions=generateQuestions();current=0;correct=0;elapsedSeconds=0;gameStarted=false;selected={consonant:null,vowel:null};document.getElementById('timer').textContent='00:00';document.getElementById('gameArea').style.display='flex';document.getElementById('resultScreen').classList.remove('show');buildCards();buildDots();loadQuestion();}
 preloadAudio();startGame();
