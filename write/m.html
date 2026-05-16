@@ -31,7 +31,8 @@ S.forEach(function(d,i){
   sv.appendChild(p);ps.push(p);
   var dot=document.createElement('div');dot.className='dot';dt.appendChild(dot);
 });
-function bp(d){var m=d.match(/M[\s]*([\d.]+),[\s]*([\d.]+)/);return m?{x:Math.max(8,Math.min(92,+m[1]-12)),y:Math.max(8,Math.min(92,+m[2]-10))}:{x:50,y:50};}
+var BADGE=[{x:16,y:18},{x:76,y:18},{x:16,y:78}];
+function bp(d,i){return BADGE[i]||{x:50,y:50};}
 var tm=[];
 function play(){
   tm.forEach(clearTimeout);tm=[];
@@ -44,7 +45,7 @@ function play(){
     tm.push(setTimeout(function(){p.style.stroke=c;p.style.transition='stroke-dashoffset 520ms cubic-bezier(0.4,0,0.6,1)';p.style.strokeDashoffset=0;},delay));
     tm.push(setTimeout(function(){
       p.style.transition='stroke .4s ease';p.style.stroke='#334155';
-      var pos=bp(S[i]),g=document.createElementNS('http://www.w3.org/2000/svg','g');g.classList.add('b');
+      var pos=bp(S[i],i),g=document.createElementNS('http://www.w3.org/2000/svg','g');g.classList.add('b');
       var ci=document.createElementNS('http://www.w3.org/2000/svg','circle');
       ci.setAttribute('cx',pos.x);ci.setAttribute('cy',pos.y);ci.setAttribute('r',7.5);ci.setAttribute('fill',c);
       var tx=document.createElementNS('http://www.w3.org/2000/svg','text');
