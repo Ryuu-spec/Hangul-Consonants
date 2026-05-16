@@ -2,477 +2,180 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Hangul Basic Consonants — Break</title>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-  /* ── CSS 변수 ── */
-  :root {
-    --blue: #4A90D9;
-    --red: #E03030;
-    --green: #2eaa6a;
-    --bg: #f5f0eb;
-    --white: #ffffff;
-    --text: #1a1a1a;
-    --border: #e0d8d0;
-    --shadow: 0 2px 12px rgba(0,0,0,0.07);
-    --radius-pill: 100px;
-    --radius-card: 14px;
-    --radius-sm: 10px;
-  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 100%; height: 100%; font-family: 'Nunito', sans-serif; background: #fbf6f1; overflow: hidden; }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-
-  html, body {
-    width: 100%;
-    /* 고정 높이 제거 — 내용이 넘치면 스크롤 */
-    min-height: 100vh;
-    font-family: 'Nunito', sans-serif;
-    background: var(--bg);
-  }
-
-  /* ══════════════════════════════
-     LAYOUT WRAPPER
-  ══════════════════════════════ */
   .container {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    padding: 12px;
-    gap: 10px;
-    /* 항상 스크롤 가능 */
-    overflow-y: visible;
+    width: 100vw; height: 100vh;
+    display: flex; flex-direction: column;
+    padding: clamp(6px, 1.5vmin, 20px);
+    gap: clamp(5px, 1.2vmin, 14px);
   }
 
-  /* ══════════════════════════════
-     TITLE BAR
-  ══════════════════════════════ */
+  /* ── 제목 바 ── */
   .title-bar {
-    background: var(--white);
-    border-radius: var(--radius-pill);
-    padding: 10px 16px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-shrink: 0;
-    box-shadow: var(--shadow);
-    gap: 8px;
+    background: white; border-radius: 100px;
+    padding: clamp(8px, 1.4vmin, 18px) clamp(14px, 2.5vmin, 30px);
+    display: flex; justify-content: space-between; align-items: center;
+    flex-shrink: 0; box-shadow: 0 2px 8px rgba(0,0,0,0.04); min-width: 0;
   }
   .title-bar h1 {
-    font-size: 14px;
-    font-weight: 800;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    min-width: 0;
+    font-size: clamp(11px, 1.6vw, 26px); font-weight: 700;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
-  .title-bar h1 .black { color: var(--text); }
-  .title-bar h1 .blue  { color: var(--blue); }
-  .title-bar h1 .red   { color: var(--red); }
+  .title-bar h1 .black { color: #1a1a1a; }
+  .title-bar h1 .blue  { color: #4A90D9; }
+  .title-bar h1 .red   { color: #E03030; }
   .timer {
-    background: var(--red);
-    color: white;
-    border-radius: 8px;
-    padding: 5px 12px;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    flex-shrink: 0;
+    background: #E03030; color: white; border-radius: 10px;
+    padding: clamp(5px, 0.9vmin, 10px) clamp(10px, 1.8vmin, 22px);
+    font-size: clamp(12px, 1.6vw, 22px); font-weight: 700;
+    letter-spacing: 0.05em; flex-shrink: 0; margin-left: 10px;
   }
 
-  /* ══════════════════════════════
-     GAME AREA
-  ══════════════════════════════ */
+  /* ── 게임 영역 ── */
   .game-area {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: space-evenly;
+    min-height: 0; padding: clamp(4px, 1vmin, 12px) 0;
   }
 
   /* ── 음절 카드 ── */
-  .syllable-wrap {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-  }
-
   .syllable-card {
-    background: var(--white);
-    border: 2px solid var(--border);
-    border-radius: var(--radius-card);
-    width: 110px;
-    height: 110px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 72px;
-    font-weight: 900;
-    color: var(--text);
-    cursor: pointer;
-    position: relative;
-    box-shadow: var(--shadow);
-    transition: transform 0.12s;
-    flex-shrink: 0;
+    background: transparent; border: none;
+    border-radius: 0;
+    width: auto; height: auto;
+    display: flex; align-items: center; justify-content: center;
+    font-size: clamp(60px, 7vw, 130px); font-weight: 700; color: #1a1a1a;
+    cursor: pointer; position: relative;
+    box-shadow: none; transition: transform 0.1s;
+    padding: 0 clamp(16px, 3vw, 40px);
   }
-  .syllable-card:active { transform: scale(0.96); }
-  .speaker-hint {
-    position: absolute;
-    bottom: 5px;
-    right: 7px;
-    font-size: 11px;
-    opacity: 0.35;
-  }
-  .syllable-card.correct-glow { border-color: var(--green); color: var(--green); animation: syllablePop 0.5s ease; }
-  .syllable-card.wrong-glow   { border-color: var(--red);   color: var(--red);   animation: syllableShake 0.4s ease; }
+  .syllable-card:hover { transform: scale(1.04); }
+  .speaker-hint { position: absolute; bottom: 6px; right: 8px; font-size: clamp(9px, 1.5vmin, 14px); opacity: 0.35; }
+  .syllable-card.correct-glow { color: #2eaa6a; animation: syllablePop 0.5s ease; }
+  .syllable-card.wrong-glow   { color: #E03030; animation: syllableShake 0.4s ease; }
+
+  @keyframes syllablePop   { 0%{transform:scale(1)} 40%{transform:scale(1.1)} 100%{transform:scale(1)} }
+  @keyframes syllableShake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
 
   /* ── 분해 표시 ── */
   .decompose {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 15px;
-    font-weight: 800;
-    opacity: 0;
-    transition: opacity 0.3s;
-    min-height: 22px;
+    display: flex; align-items: center; gap: clamp(4px, 1vmin, 10px);
+    font-size: clamp(13px, 1.8vw, 26px); font-weight: 600;
+    opacity: 0; transition: opacity 0.3s; min-height: clamp(20px, 4vmin, 36px);
   }
   .decompose.show { opacity: 1; }
-  .decompose .sep { color: #ccc; font-size: 0.75em; font-weight: 400; }
+  .decompose .sep { color: #ccc; font-size: 0.7em; font-weight: 400; }
 
-  /* ── 패널 행 (기본: 세로 stacked) ── */
-  .panels-row {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    width: 100%;
-  }
-
-  /* ── 개별 패널 ── */
-  .panel {
-    background: var(--white);
-    border-radius: var(--radius-card);
-    padding: 12px 14px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    box-shadow: var(--shadow);
-    width: 100%;
-  }
-  .panel-label {
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-  }
-  .consonant-label { color: var(--blue); }
-  .vowel-label     { color: var(--red); }
-
-  /* ── 그리드 ── */
-  .consonant-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-    width: 100%;
-  }
-  .vowel-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-    width: 100%;
-  }
-
-  /* ── 카드 (자모) ── */
-  .card {
-    background: var(--white);
-    border-radius: var(--radius-sm);
-    display: flex;
-    align-items: center;
+  /* ── 카드 행 ── */
+  .cards-row {
+    display: flex; align-items: stretch;
+    gap: clamp(20px, 5vw, 72px);
     justify-content: center;
+    width: 90%;
+  }
+
+  /* ── 패널 ── */
+  .panel {
+    flex: 1;
+    background: white; border-radius: clamp(10px, 2vmin, 18px);
+    padding: clamp(20px, 4vmin, 52px);
+    display: flex; flex-direction: column; align-items: center;
+    gap: clamp(8px, 1.8vmin, 20px);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  }
+  .panel-label { font-size: clamp(8px, 1.2vmin, 12px); font-weight: 600; letter-spacing: 0.08em; }
+  .consonant-label { color: #4A90D9; }
+  .vowel-label     { color: #E03030; }
+
+  .consonant-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(10px, 2.5vmin, 30px); }
+  .vowel-grid     { display: grid; grid-template-columns: repeat(4,1fr); gap: clamp(10px, 2.5vmin, 30px); }
+
+  /* ── 자모 카드 ── */
+  .card {
+    background: white; border-radius: clamp(6px, 1.2vmin, 14px);
+    display: flex; align-items: center; justify-content: center;
     cursor: pointer;
     transition: all 0.15s cubic-bezier(0.68,-0.55,0.265,1.55);
-    user-select: none;
-    font-weight: 800;
-    color: var(--text);
-    aspect-ratio: 1;
-    font-size: 28px;
+    user-select: none; font-weight: 700; color: #1a1a1a;
+    width: clamp(60px, 12vmin, 150px); height: clamp(60px, 12vmin, 150px);
+    font-size: clamp(22px, 4.5vw, 62px);
     box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-    -webkit-tap-highlight-color: transparent;
   }
-  .consonant-card { border: 1.5px solid var(--blue); }
-  .vowel-card     { border: 1.5px solid var(--red); }
+  .consonant-card { border: 1.5px solid #4A90D9; }
+  .vowel-card     { border: 1.5px solid #E03030; }
 
-  .card:active:not(.correct-flash):not(.wrong-flash) { transform: scale(0.93); }
+  .card:hover:not(.correct-flash):not(.wrong-flash) { transform: scale(1.08) translateY(-2px); box-shadow: 0 6px 14px rgba(0,0,0,0.1); }
+  .card:active { transform: scale(0.97); }
   .card.selected-c { background: #d6ebf5; border-color: #2a70c9; }
   .card.selected-v { background: #fde8e8; border-color: #c02020; }
-  .card.correct-flash { background: #d4f5e2 !important; border-color: var(--green) !important; color: var(--green) !important; animation: correctPop 0.5s ease; }
-  .card.wrong-flash   { background: #ffe0e0 !important; border-color: var(--red)   !important; animation: shake 0.4s ease; }
+  .card.correct-flash { background: #d4f5e2 !important; border-color: #2eaa6a !important; color: #2eaa6a !important; animation: correctPop 0.5s ease; }
+  .card.wrong-flash   { background: #ffe0e0 !important; border-color: #E03030 !important; animation: shake 0.4s ease; }
 
-  /* ── 진행 도트 ── */
-  .progress-dots {
-    display: flex;
-    justify-content: center;
-    gap: 6px;
-    flex-shrink: 0;
-    padding: 2px 0;
-  }
-  .dot {
-    height: 4px;
-    width: 24px;
-    background: #ddd;
-    border-radius: 3px;
-    transition: background 0.3s;
-  }
-  .dot.active { background: var(--red); }
-  .dot.done   { background: var(--blue); }
-
-  /* ══════════════════════════════
-     RESULT SCREEN
-  ══════════════════════════════ */
-  .result-screen {
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    flex: 1;
-    text-align: center;
-    gap: 16px;
-    padding: 20px;
-  }
-  .result-screen.show { display: flex; }
-  .result-emoji { font-size: 56px; }
-  .result-title { font-size: 24px; font-weight: 800; color: var(--text); }
-  .result-score { font-size: 15px; color: #666; }
-  .result-time  { font-size: 14px; color: var(--blue); font-weight: 700; }
-  .retry-btn {
-    background: var(--red);
-    color: white;
-    border: none;
-    border-radius: 12px;
-    padding: 12px 36px;
-    font-size: 15px;
-    font-weight: 700;
-    cursor: pointer;
-    font-family: 'Nunito', sans-serif;
-    transition: transform 0.1s, background 0.2s;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .retry-btn:hover  { background: #c02020; }
-  .retry-btn:active { transform: scale(0.96); }
-
-  /* ── 컨페티 ── */
-  .confetti { position: fixed; top: -10px; z-index: 9999; pointer-events: none; }
-  @keyframes confetti-fall { to { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
-
-  /* ── 애니메이션 ── */
-  @keyframes syllablePop   { 0%{transform:scale(1)} 40%{transform:scale(1.1)} 100%{transform:scale(1)} }
-  @keyframes syllableShake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
-  @keyframes correctPop    { 0%{transform:scale(1)} 40%{transform:scale(1.14)} 100%{transform:scale(1)} }
+  @keyframes correctPop { 0%{transform:scale(1)} 40%{transform:scale(1.14)} 100%{transform:scale(1)} }
   @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-7px)} 40%{transform:translateX(7px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
 
-
-  /* ══════════════════════════════
-     📱 PHONE PORTRAIT  (≤ 480px)
-     기본값이 모바일 우선
-  ══════════════════════════════ */
-
-  /* ══════════════════════════════
-     📱 PHONE LANDSCAPE  (높이 ≤ 500px & 가로)
-  ══════════════════════════════ */
-  @media (max-height: 500px) and (orientation: landscape) {
-    .container { padding: 6px; gap: 6px; }
-    .title-bar { padding: 6px 12px; }
-    .title-bar h1 { font-size: 11px; }
-    .timer { font-size: 11px; padding: 4px 8px; }
-
-    .syllable-card { width: 76px; height: 76px; font-size: 46px; }
-    .decompose { font-size: 13px; min-height: 18px; }
-
-    /* 가로 방향에서 자음+모음 패널을 나란히 */
-    .panels-row {
-      flex-direction: row;
-      align-items: flex-start;
-      justify-content: center;
-    }
-    .panel { width: auto; flex: 1; max-width: 48%; padding: 8px 10px; gap: 6px; }
-
-    .consonant-grid { grid-template-columns: repeat(4, 1fr); gap: 5px; }
-    .vowel-grid     { grid-template-columns: repeat(4, 1fr); gap: 5px; }
-    .card { font-size: 20px; border-radius: 7px; }
-
-    .syllable-wrap { flex-direction: row; gap: 16px; align-items: center; }
+  /* ── 모바일 세로 (600px 미만) ── */
+  @media (max-width: 600px) {
+    .cards-row { flex-direction: column; gap: clamp(8px, 2vmin, 16px); width: 100%; }
+    .panel { width: 100%; }
+    .syllable-card { width: clamp(80px, 22vmin, 130px); height: clamp(80px, 22vmin, 130px); }
+    .title-bar h1 { font-size: clamp(10px, 3vmin, 16px); }
   }
 
-  /* ══════════════════════════════
-     📟 TABLET PORTRAIT  (481px ~ 768px)
-  ══════════════════════════════ */
-  @media (min-width: 481px) and (max-width: 768px) and (orientation: portrait) {
-    .container { padding: 16px; gap: 14px; }
-    .title-bar { padding: 12px 22px; }
-    .title-bar h1 { font-size: 16px; }
-    .timer { font-size: 15px; padding: 7px 16px; border-radius: 10px; }
-
-    .syllable-card { width: 140px; height: 140px; font-size: 90px; }
-    .decompose { font-size: 18px; min-height: 26px; gap: 8px; }
-
-    .panel { padding: 16px 18px; gap: 12px; }
-    .panel-label { font-size: 11px; }
-
-    .consonant-grid { grid-template-columns: repeat(4, 1fr); gap: 10px; }
-    .vowel-grid     { grid-template-columns: repeat(4, 1fr); gap: 10px; }
-    .card { font-size: 36px; border-radius: 12px; }
-
-    .dot { width: 30px; height: 5px; }
-    .progress-dots { gap: 8px; }
+  /* ── 태블릿 (601~900px) ── */
+  @media (min-width: 601px) and (max-width: 900px) {
+    .card { width: clamp(52px, 8vmin, 88px); height: clamp(52px, 8vmin, 88px); }
   }
 
-  /* ══════════════════════════════
-     📟 TABLET LANDSCAPE  (601px ~ 1024px, landscape)
-  ══════════════════════════════ */
-  @media (min-width: 601px) and (max-width: 1024px) and (orientation: landscape) {
-    .container {
-      padding: 14px;
-      gap: 12px;
-      /* 태블릿 가로: 상단 타이틀 / 중앙 게임(가로배치) / 하단 도트 */
-    }
-    .title-bar { padding: 10px 20px; }
-    .title-bar h1 { font-size: 16px; }
-    .timer { font-size: 14px; padding: 6px 14px; }
+  /* ── 진행 도트 ── */
+  .progress-dots { display: flex; justify-content: center; gap: clamp(4px, 1vmin, 10px); flex-shrink: 0; }
+  .dot { width: clamp(16px, 3vmin, 32px); height: clamp(3px, 0.5vmin, 5px); background: #ddd; border-radius: 3px; transition: background 0.3s; }
+  .dot.active { background: #E03030; }
+  .dot.done   { background: #4A90D9; }
 
-    /* 음절카드와 패널을 가로로 배치 */
-    .game-area {
-      flex-direction: row;
-      align-items: center;
-      justify-content: center;
-      gap: 20px;
-    }
-    .syllable-wrap { flex-shrink: 0; }
-    .syllable-card { width: 120px; height: 120px; font-size: 78px; }
-    .decompose { font-size: 15px; }
-
-    .panels-row {
-      flex-direction: row;
-      align-items: flex-start;
-      gap: 14px;
-      width: auto;
-    }
-    .panel { width: auto; padding: 14px 16px; gap: 10px; }
-
-    .consonant-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-    .vowel-grid     { grid-template-columns: repeat(4, 1fr); gap: 8px; }
-    .card { font-size: 30px; width: 64px; height: 64px; aspect-ratio: unset; border-radius: 10px; }
-
-    .dot { width: 24px; height: 4px; }
+  /* ── 결과 화면 ── */
+  .result-screen { display: none; flex-direction: column; align-items: center; justify-content: center; flex: 1; text-align: center; gap: clamp(12px, 2vmin, 24px); }
+  .result-screen.show { display: flex; }
+  .result-emoji { font-size: clamp(36px, 8vmin, 70px); }
+  .result-title { font-size: clamp(18px, 4vmin, 32px); font-weight: 700; color: #1a1a1a; }
+  .result-score { font-size: clamp(13px, 2.5vmin, 20px); color: #666; }
+  .result-time  { font-size: clamp(12px, 2vmin, 18px); color: #4A90D9; font-weight: 700; }
+  .retry-btn {
+    background: #E03030; color: white; border: none; border-radius: 12px;
+    padding: clamp(10px, 1.5vmin, 16px) clamp(24px, 4vmin, 44px);
+    font-size: clamp(13px, 2vmin, 18px); font-weight: 700;
+    cursor: pointer; font-family: 'Nunito', sans-serif;
+    transition: transform 0.1s, background 0.2s;
   }
-
-  /* ══════════════════════════════
-     🖥  DESKTOP  (≥ 769px portrait / ≥ 1025px)
-  ══════════════════════════════ */
-  @media (min-width: 769px) and (orientation: portrait),
-         (min-width: 1025px) {
-    .container {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 20px 24px;
-      gap: 16px;
-
-
-
-    }
-
-    .title-bar { padding: 14px 28px; }
-    .title-bar h1 { font-size: 20px; }
-    .timer { font-size: 17px; padding: 8px 20px; border-radius: 10px; }
-
-    .game-area {
-      gap: 20px;
-    }
-
-    .syllable-card {
-      width: 160px;
-      height: 160px;
-      font-size: 108px;
-      border-radius: 20px;
-    }
-    .speaker-hint { font-size: 13px; bottom: 8px; right: 10px; }
-    .decompose { font-size: 22px; gap: 10px; min-height: 32px; }
-
-    /* 데스크톱: 자음/모음 패널 가로 나란히 */
-    .panels-row {
-      flex-direction: row;
-      align-items: flex-start;
-      justify-content: center;
-      gap: 32px;
-      width: auto;
-    }
-    .panel {
-      width: auto;
-      padding: 20px 24px;
-      gap: 14px;
-    }
-    .panel-label { font-size: 12px; }
-
-    .consonant-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
-    .vowel-grid     { grid-template-columns: repeat(4, 1fr); gap: 14px; }
-
-    .card {
-      width: 88px;
-      height: 88px;
-      font-size: 46px;
-      aspect-ratio: unset;
-      border-radius: 14px;
-      border-width: 1.5px;
-    }
-    .card:hover:not(.correct-flash):not(.wrong-flash) {
-      transform: scale(1.08) translateY(-2px);
-      box-shadow: 0 6px 16px rgba(0,0,0,0.1);
-    }
-
-    .dot { width: 32px; height: 5px; }
-    .progress-dots { gap: 10px; }
-
-    .result-emoji { font-size: 68px; }
-    .result-title { font-size: 32px; }
-    .result-score { font-size: 18px; }
-    .result-time  { font-size: 16px; }
-    .retry-btn { font-size: 17px; padding: 14px 48px; border-radius: 14px; }
-  }
-
-  /* ══════════════════════════════
-     🖥  WIDE DESKTOP  (≥ 1280px)
-  ══════════════════════════════ */
-  @media (min-width: 1280px) {
-    .container { max-width: 1100px; padding: 24px 32px; }
-    .card { width: 100px; height: 100px; font-size: 52px; }
-    .syllable-card { width: 180px; height: 180px; font-size: 120px; }
-    .consonant-grid { gap: 16px; }
-    .vowel-grid     { gap: 16px; }
-  }
+  .retry-btn:hover  { background: #c02020; }
+  .retry-btn:active { transform: scale(0.97); }
+  .confetti { position: fixed; top: -10px; z-index: 9999; pointer-events: none; }
+  @keyframes confetti-fall { to { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
 </style>
 </head>
 <body>
 <div class="container">
 
   <div class="title-bar">
-    <h1>
-      <span class="black">Break — Find the </span><span class="blue">consonant</span><span class="black"> &amp; </span><span class="red">vowel</span>
-    </h1>
+    <h1><span class="black">Break — Find the </span><span class="blue">consonant</span><span class="black"> &amp; </span><span class="red">vowel</span></h1>
     <div class="timer" id="timer">00:00</div>
   </div>
 
   <div class="game-area" id="gameArea">
-
-    <div class="syllable-wrap">
+    <div style="display:flex; flex-direction:column; align-items:center; gap:clamp(6px,1vmin,12px);">
       <div class="syllable-card" id="syllableChar" onclick="playCurrentSyllable()">
         ?<span class="speaker-hint">🔊</span>
       </div>
       <div class="decompose" id="decomposeRow"></div>
     </div>
 
-    <div class="panels-row">
+    <div class="cards-row">
       <div class="panel">
         <div class="panel-label consonant-label">CONSONANT</div>
         <div class="consonant-grid" id="consonantGrid"></div>
@@ -482,7 +185,6 @@
         <div class="vowel-grid" id="vowelGrid"></div>
       </div>
     </div>
-
   </div>
 
   <div class="result-screen" id="resultScreen">
@@ -497,251 +199,45 @@
 </div>
 
 <script>
-/* ── 데이터 ── */
-const CONSONANTS = ['ㅇ','ㄴ','ㅁ','ㄹ'];
-const VOWELS = ['ㅏ','ㅓ','ㅗ','ㅜ','ㅡ','ㅣ','ㅔ','ㅐ'];
-const SYLLABLE_MAP = {
+const CONSONANTS=['ㅇ','ㄴ','ㅁ','ㄹ'];
+const VOWELS=['ㅏ','ㅓ','ㅗ','ㅜ','ㅡ','ㅣ','ㅔ','ㅐ'];
+const SYLLABLE_MAP={
   'ㅇ':{'ㅏ':'아','ㅓ':'어','ㅗ':'오','ㅜ':'우','ㅡ':'으','ㅣ':'이','ㅔ':'에','ㅐ':'애'},
   'ㄴ':{'ㅏ':'나','ㅓ':'너','ㅗ':'노','ㅜ':'누','ㅡ':'느','ㅣ':'니','ㅔ':'네','ㅐ':'내'},
   'ㅁ':{'ㅏ':'마','ㅓ':'머','ㅗ':'모','ㅜ':'무','ㅡ':'므','ㅣ':'미','ㅔ':'메','ㅐ':'매'},
   'ㄹ':{'ㅏ':'라','ㅓ':'러','ㅗ':'로','ㅜ':'루','ㅡ':'르','ㅣ':'리','ㅔ':'레','ㅐ':'래'}
 };
-const AUDIO_MAP = {
+const AUDIO_MAP={
   '아':'a','어':'eo','오':'o','우':'u','으':'eu','이':'i','에':'e','애':'ae',
   '나':'na','너':'neo','노':'no','누':'nu','느':'neu','니':'ni','네':'ne','내':'nae',
   '마':'ma','머':'meo','모':'mo','무':'mu','므':'meu','미':'mi','메':'me','매':'mae',
   '라':'ra','러':'reo','로':'ro','루':'ru','르':'reu','리':'ri','레':'re','래':'rae'
 };
-const AUDIO_BASE = 'https://ryuu-spec.github.io/Hangul-Consonants/bagic1/';
-const audioCache = {};
-
-/* ── 오디오 ── */
-function preloadAudio() {
-  Object.values(AUDIO_MAP).forEach(f => {
-    const a = new Audio(`${AUDIO_BASE}${f}.mp3`);
-    a.preload = 'auto';
-    audioCache[f] = a;
-  });
-}
-function playSyllable(s) {
-  const f = AUDIO_MAP[s];
-  if (!f) return;
-  const a = audioCache[f] || new Audio(`${AUDIO_BASE}${f}.mp3`);
-  a.currentTime = 0;
-  a.play().catch(() => {});
-}
-let currentSyllable = '';
-function playCurrentSyllable() { if (currentSyllable) playSyllable(currentSyllable); }
-
-/* ── 효과음 ── */
-function playCorrectSound() {
-  try {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const osc = ctx.createOscillator(), g = ctx.createGain();
-    osc.connect(g); g.connect(ctx.destination);
-    osc.frequency.value = 523.25; osc.type = 'sine';
-    g.gain.setValueAtTime(0.3, ctx.currentTime);
-    g.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.25);
-    osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.25);
-  } catch(e) {}
-}
-function playWrongSound() {
-  try {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const osc = ctx.createOscillator(), g = ctx.createGain();
-    osc.connect(g); g.connect(ctx.destination);
-    osc.frequency.value = 200; osc.type = 'sawtooth';
-    g.gain.setValueAtTime(0.2, ctx.currentTime);
-    g.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.15);
-    osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.15);
-  } catch(e) {}
-}
-function playCelebrationSound() {
-  try {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    [523.25,659.25,783.99,1046.50].forEach((f,i) => {
-      const osc = ctx.createOscillator(), g = ctx.createGain();
-      osc.connect(g); g.connect(ctx.destination);
-      osc.frequency.value = f; osc.type = 'sine';
-      const t = ctx.currentTime + i * 0.15;
-      g.gain.setValueAtTime(0.3, t);
-      g.gain.exponentialRampToValueAtTime(0.01, t + 0.4);
-      osc.start(t); osc.stop(t + 0.4);
-    });
-  } catch(e) {}
-}
-
-/* ── 컨페티 ── */
-function createConfetti() {
-  const colors = ['#E03030','#4A90D9','#2eaa6a','#f9ca24','#a29bfe','#fd79a8'];
-  const shapes = ['●','■','★','▲'];
-  for (let i = 0; i < 80; i++) {
-    const el = document.createElement('div');
-    el.className = 'confetti';
-    el.textContent = shapes[Math.floor(Math.random() * shapes.length)];
-    el.style.left = Math.random() * 100 + 'vw';
-    el.style.color = colors[Math.floor(Math.random() * colors.length)];
-    el.style.fontSize = (Math.random() * 12 + 10) + 'px';
-    el.style.animation = `confetti-fall ${Math.random() * 2 + 2}s linear ${Math.random() * 0.5}s forwards`;
-    document.body.appendChild(el);
-    setTimeout(() => el.remove(), 5000);
-  }
-}
-
-/* ── 게임 상태 ── */
-const TOTAL = 8;
-let questions = [], current = 0, selected = {consonant:null, vowel:null};
-let correct = 0, checking = false;
-let timerInterval = null, elapsedSeconds = 0, gameStarted = false;
-
-function startTimer() {
-  if (gameStarted) return;
-  gameStarted = true;
-  timerInterval = setInterval(() => {
-    elapsedSeconds++;
-    const m = Math.floor(elapsedSeconds / 60).toString().padStart(2, '0');
-    const s = (elapsedSeconds % 60).toString().padStart(2, '0');
-    document.getElementById('timer').textContent = `${m}:${s}`;
-  }, 1000);
-}
-function stopTimer() { clearInterval(timerInterval); }
-
-function generateQuestions() {
-  const all = [];
-  CONSONANTS.forEach(c => VOWELS.forEach(v => all.push({c, v})));
-  const shuffled = all.sort(() => Math.random() - 0.5);
-  const result = [], used = new Set();
-  CONSONANTS.forEach(c => {
-    const pick = shuffled.find(q => q.c === c && !used.has(q));
-    if (pick) { result.push(pick); used.add(pick); }
-  });
-  shuffled.forEach(q => { if (result.length < TOTAL && !used.has(q)) result.push(q); });
-  return result.slice(0, TOTAL).sort(() => Math.random() - 0.5);
-}
-
-function buildCards() {
-  document.getElementById('consonantGrid').innerHTML =
-    CONSONANTS.map(c => `<div class="card consonant-card" id="c-${c}" onclick="handleClick('consonant','${c}')">${c}</div>`).join('');
-  document.getElementById('vowelGrid').innerHTML =
-    VOWELS.map(v => `<div class="card vowel-card" id="v-${v}" onclick="handleClick('vowel','${v}')">${v}</div>`).join('');
-}
-
-function buildDots() {
-  document.getElementById('progressDots').innerHTML =
-    Array.from({length: TOTAL}, (_, i) => `<div class="dot" id="dot-${i}"></div>`).join('');
-}
-
-function updateDots() {
-  for (let i = 0; i < TOTAL; i++) {
-    const d = document.getElementById(`dot-${i}`);
-    d.className = 'dot' + (i < current ? ' done' : i === current ? ' active' : '');
-  }
-}
-
-function loadQuestion() {
-  if (current >= TOTAL) { showResult(); return; }
-  const q = questions[current];
-  selected = {consonant: null, vowel: null};
-  checking = false;
-  const syllable = SYLLABLE_MAP[q.c][q.v];
-  currentSyllable = syllable;
-  const sc = document.getElementById('syllableChar');
-  sc.childNodes[0].textContent = syllable;
-  sc.className = 'syllable-card';
-  const dr = document.getElementById('decomposeRow');
-  dr.innerHTML = '';
-  dr.classList.remove('show');
-  setTimeout(() => playSyllable(syllable), 200);
-  document.querySelectorAll('.card').forEach(el => {
-    el.className = el.className.replace(/\s*(selected-[cv]|correct-flash|wrong-flash)/g, '').trim();
-  });
-  updateDots();
-}
-
-function handleClick(type, value) {
-  if (!gameStarted) startTimer();
-  if (checking) return;
-  if (type === 'consonant' && selected.consonant) {
-    const prev = document.getElementById(`c-${selected.consonant}`);
-    if (prev) prev.classList.remove('selected-c');
-  }
-  if (type === 'vowel' && selected.vowel) {
-    const prev = document.getElementById(`v-${selected.vowel}`);
-    if (prev) prev.classList.remove('selected-v');
-  }
-  selected[type] = value;
-  const el = document.getElementById(type === 'consonant' ? `c-${value}` : `v-${value}`);
-  el.classList.add(type === 'consonant' ? 'selected-c' : 'selected-v');
-  if (selected.consonant && selected.vowel) checkAnswer();
-}
-
-function checkAnswer() {
-  checking = true;
-  const q = questions[current];
-  const cEl = document.getElementById(`c-${selected.consonant}`);
-  const vEl = document.getElementById(`v-${selected.vowel}`);
-  const sc  = document.getElementById('syllableChar');
-
-  if (selected.consonant === q.c && selected.vowel === q.v) {
-    correct++;
-    playCorrectSound();
-    playSyllable(SYLLABLE_MAP[q.c][q.v]);
-    [cEl, vEl].forEach(el => {
-      el.classList.remove('selected-c', 'selected-v');
-      el.classList.add('correct-flash');
-    });
-    sc.className = 'syllable-card correct-glow';
-    const dr = document.getElementById('decomposeRow');
-    dr.innerHTML = `<span style="color:var(--text)">${q.c}</span><span class="sep">+</span><span style="color:var(--red)">${q.v}</span><span class="sep">=</span><span style="color:var(--text)">${SYLLABLE_MAP[q.c][q.v]}</span>`;
-    dr.classList.add('show');
-    setTimeout(() => { current++; loadQuestion(); }, 900);
-  } else {
-    playWrongSound();
-    if (selected.consonant !== q.c) {
-      cEl.classList.remove('selected-c');
-      cEl.classList.add('wrong-flash');
-    }
-    if (selected.vowel !== q.v) {
-      vEl.classList.remove('selected-v');
-      vEl.classList.add('wrong-flash');
-    }
-    sc.className = 'syllable-card wrong-glow';
-    setTimeout(() => {
-      if (selected.consonant !== q.c) { cEl.classList.remove('wrong-flash'); selected.consonant = null; }
-      if (selected.vowel !== q.v)     { vEl.classList.remove('wrong-flash'); selected.vowel = null; }
-      sc.className = 'syllable-card';
-      checking = false;
-    }, 450);
-  }
-}
-
-function showResult() {
-  stopTimer();
-  document.getElementById('gameArea').style.display = 'none';
-  document.getElementById('resultScreen').classList.add('show');
-  document.getElementById('resultScore').textContent = `You got ${correct} out of ${TOTAL} correct!`;
-  const m = Math.floor(elapsedSeconds / 60).toString().padStart(2, '0');
-  const s = (elapsedSeconds % 60).toString().padStart(2, '0');
-  document.getElementById('resultTime').textContent = `Completed in ${m}:${s}`;
-  updateDots();
-  playCelebrationSound();
-  createConfetti();
-}
-
-function startGame() {
-  questions = generateQuestions();
-  current = 0; correct = 0; elapsedSeconds = 0; gameStarted = false;
-  selected = {consonant: null, vowel: null};
-  document.getElementById('timer').textContent = '00:00';
-  document.getElementById('gameArea').style.display = 'flex';
-  document.getElementById('resultScreen').classList.remove('show');
-  buildCards();
-  buildDots();
-  loadQuestion();
-}
-
-preloadAudio();
-startGame();
+const AUDIO_BASE='https://ryuu-spec.github.io/Hangul-Consonants/bagic1/';
+const audioCache={};
+function preloadAudio(){Object.values(AUDIO_MAP).forEach(f=>{const a=new Audio(`${AUDIO_BASE}${f}.mp3`);a.preload='auto';audioCache[f]=a;});}
+function playSyllable(s){const f=AUDIO_MAP[s];if(!f)return;const a=audioCache[f]||new Audio(`${AUDIO_BASE}${f}.mp3`);a.currentTime=0;a.play().catch(()=>{});}
+let currentSyllable='';
+function playCurrentSyllable(){if(currentSyllable)playSyllable(currentSyllable);}
+function playCorrectSound(){const ctx=new(window.AudioContext||window.webkitAudioContext)();const osc=ctx.createOscillator(),g=ctx.createGain();osc.connect(g);g.connect(ctx.destination);osc.frequency.value=523.25;osc.type='sine';g.gain.setValueAtTime(0.3,ctx.currentTime);g.gain.exponentialRampToValueAtTime(0.01,ctx.currentTime+0.25);osc.start(ctx.currentTime);osc.stop(ctx.currentTime+0.25);}
+function playWrongSound(){const ctx=new(window.AudioContext||window.webkitAudioContext)();const osc=ctx.createOscillator(),g=ctx.createGain();osc.connect(g);g.connect(ctx.destination);osc.frequency.value=200;osc.type='sawtooth';g.gain.setValueAtTime(0.2,ctx.currentTime);g.gain.exponentialRampToValueAtTime(0.01,ctx.currentTime+0.15);osc.start(ctx.currentTime);osc.stop(ctx.currentTime+0.15);}
+function playCelebrationSound(){const ctx=new(window.AudioContext||window.webkitAudioContext)();[523.25,659.25,783.99,1046.50].forEach((f,i)=>{const osc=ctx.createOscillator(),g=ctx.createGain();osc.connect(g);g.connect(ctx.destination);osc.frequency.value=f;osc.type='sine';const t=ctx.currentTime+i*0.15;g.gain.setValueAtTime(0.3,t);g.gain.exponentialRampToValueAtTime(0.01,t+0.4);osc.start(t);osc.stop(t+0.4);});}
+function createConfetti(){const colors=['#E03030','#4A90D9','#2eaa6a','#f9ca24','#a29bfe','#fd79a8'];const shapes=['●','■','★','▲'];for(let i=0;i<80;i++){const el=document.createElement('div');el.className='confetti';el.textContent=shapes[Math.floor(Math.random()*shapes.length)];el.style.left=Math.random()*100+'vw';el.style.color=colors[Math.floor(Math.random()*colors.length)];el.style.fontSize=(Math.random()*12+10)+'px';el.style.animation=`confetti-fall ${Math.random()*2+2}s linear ${Math.random()*0.5}s forwards`;document.body.appendChild(el);setTimeout(()=>el.remove(),5000);}}
+const TOTAL=8;
+let questions=[],current=0,selected={consonant:null,vowel:null},correct=0,checking=false;
+let timerInterval=null,elapsedSeconds=0,gameStarted=false;
+function startTimer(){if(gameStarted)return;gameStarted=true;timerInterval=setInterval(()=>{elapsedSeconds++;const m=Math.floor(elapsedSeconds/60).toString().padStart(2,'0');const s=(elapsedSeconds%60).toString().padStart(2,'0');document.getElementById('timer').textContent=`${m}:${s}`;},1000);}
+function stopTimer(){clearInterval(timerInterval);}
+function generateQuestions(){const all=[];CONSONANTS.forEach(c=>VOWELS.forEach(v=>all.push({c,v})));const shuffled=all.sort(()=>Math.random()-0.5);const result=[],used=new Set();CONSONANTS.forEach(c=>{const pick=shuffled.find(q=>q.c===c&&!used.has(q));if(pick){result.push(pick);used.add(pick);}});shuffled.forEach(q=>{if(result.length<TOTAL&&!used.has(q))result.push(q);});return result.slice(0,TOTAL).sort(()=>Math.random()-0.5);}
+function buildCards(){document.getElementById('consonantGrid').innerHTML=CONSONANTS.map(c=>`<div class="card consonant-card" id="c-${c}" onclick="handleClick('consonant','${c}')">${c}</div>`).join('');document.getElementById('vowelGrid').innerHTML=VOWELS.map(v=>`<div class="card vowel-card" id="v-${v}" onclick="handleClick('vowel','${v}')">${v}</div>`).join('');}
+function buildDots(){document.getElementById('progressDots').innerHTML=Array.from({length:TOTAL},(_,i)=>`<div class="dot" id="dot-${i}"></div>`).join('');}
+function updateDots(){for(let i=0;i<TOTAL;i++){const d=document.getElementById(`dot-${i}`);d.className='dot'+(i<current?' done':i===current?' active':'');}}
+function loadQuestion(){if(current>=TOTAL){showResult();return;}const q=questions[current];selected={consonant:null,vowel:null};checking=false;const syllable=SYLLABLE_MAP[q.c][q.v];currentSyllable=syllable;const sc=document.getElementById('syllableChar');sc.childNodes[0].textContent=syllable;sc.className='syllable-card';const dr=document.getElementById('decomposeRow');dr.innerHTML='';dr.classList.remove('show');setTimeout(()=>playSyllable(syllable),200);document.querySelectorAll('.card').forEach(el=>{el.className=el.className.replace(/\s*(selected-[cv]|correct-flash|wrong-flash)/g,'').trim();});updateDots();}
+function handleClick(type,value){if(!gameStarted)startTimer();if(checking)return;if(type==='consonant'&&selected.consonant){const prev=document.getElementById(`c-${selected.consonant}`);if(prev)prev.classList.remove('selected-c');}if(type==='vowel'&&selected.vowel){const prev=document.getElementById(`v-${selected.vowel}`);if(prev)prev.classList.remove('selected-v');}selected[type]=value;const el=document.getElementById(type==='consonant'?`c-${value}`:`v-${value}`);el.classList.add(type==='consonant'?'selected-c':'selected-v');if(selected.consonant&&selected.vowel)checkAnswer();}
+function checkAnswer(){checking=true;const q=questions[current];const cEl=document.getElementById(`c-${selected.consonant}`);const vEl=document.getElementById(`v-${selected.vowel}`);const sc=document.getElementById('syllableChar');if(selected.consonant===q.c&&selected.vowel===q.v){correct++;playCorrectSound();playSyllable(SYLLABLE_MAP[q.c][q.v]);[cEl,vEl].forEach(el=>{el.classList.remove('selected-c','selected-v');el.classList.add('correct-flash');});sc.className='syllable-card correct-glow';const dr=document.getElementById('decomposeRow');dr.innerHTML=`<span style="color:#1a1a1a;">${q.c}</span><span class="sep">+</span><span style="color:#E03030;">${q.v}</span><span class="sep">=</span><span style="color:#1a1a1a;">${SYLLABLE_MAP[q.c][q.v]}</span>`;dr.classList.add('show');setTimeout(()=>{current++;loadQuestion();},900);}else{playWrongSound();if(selected.consonant!==q.c){cEl.classList.remove('selected-c');cEl.classList.add('wrong-flash');}if(selected.vowel!==q.v){vEl.classList.remove('selected-v');vEl.classList.add('wrong-flash');}sc.className='syllable-card wrong-glow';setTimeout(()=>{if(selected.consonant!==q.c){cEl.classList.remove('wrong-flash');selected.consonant=null;}if(selected.vowel!==q.v){vEl.classList.remove('wrong-flash');selected.vowel=null;}sc.className='syllable-card';checking=false;},450);}}
+function showResult(){stopTimer();document.getElementById('gameArea').style.display='none';document.getElementById('resultScreen').classList.add('show');document.getElementById('resultScore').textContent=`You got ${correct} out of ${TOTAL} correct!`;const m=Math.floor(elapsedSeconds/60).toString().padStart(2,'0');const s=(elapsedSeconds%60).toString().padStart(2,'0');document.getElementById('resultTime').textContent=`Completed in ${m}:${s}`;updateDots();playCelebrationSound();createConfetti();}
+function startGame(){questions=generateQuestions();current=0;correct=0;elapsedSeconds=0;gameStarted=false;selected={consonant:null,vowel:null};document.getElementById('timer').textContent='00:00';document.getElementById('gameArea').style.display='flex';document.getElementById('resultScreen').classList.remove('show');buildCards();buildDots();loadQuestion();}
+preloadAudio();startGame();
 </script>
 </body>
 </html>
