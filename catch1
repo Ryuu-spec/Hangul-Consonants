@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BC1 · Catch</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f0f4ff;
+    --card-bg: #ffffff;
+    --blue: #4a6cf7;
+    --blue-light: #e8eeff;
+    --text-dark: #1a2340;
+    --text-mid: #5a6a8a;
+    --text-light: #9aaacb;
+    --green: #3ecf8e;
+    --red: #f76a6a;
+    --yellow: #ffc857;
+    --radius: 20px;
+    --shadow: 0 4px 24px rgba(74,108,247,0.10);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .container {
+    background: var(--card-bg);
+    border-radius: 28px;
+    width: 900px;
+    max-width: 98vw;
+    padding: 48px 56px;
+    box-shadow: var(--shadow);
+    position: relative;
+  }
+
+  /* Header */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+  }
+  .header-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    color: var(--blue);
+    text-transform: uppercase;
+  }
+  .progress-badge {
+    background: var(--blue);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    border-radius: 50px;
+    padding: 6px 18px;
+  }
+
+  /* Main instruction */
+  .instruction {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 12px;
+  }
+  .instruction h1 {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--text-dark);
+    letter-spacing: -0.02em;
+  }
+  .speaker-btn {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: var(--blue);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.15s, box-shadow 0.15s;
+    flex-shrink: 0;
+    box-shadow: 0 4px 16px rgba(74,108,247,0.35);
+  }
+  .speaker-btn:hover { transform: scale(1.08); }
+  .speaker-btn.playing { animation: pulse 0.6s ease-in-out infinite alternate; }
+  @keyframes pulse {
+    from { box-shadow: 0 4px 16px rgba(74,108,247,0.35); }
+    to { box-shadow: 0 4px 28px rgba(74,108,247,0.65); }
+  }
+  .speaker-btn svg { width: 24px; height: 24px; fill: white; }
+
+  .sub-label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--text-light);
+    text-transform: uppercase;
+    margin-bottom: 36px;
+  }
+
+  /* Sound wave display */
+  .syllable-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 36px;
+    min-height: 52px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .syllable-chip {
+    background: var(--blue-light);
+    border-radius: 50px;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.25s, transform 0.25s, background 0.2s;
+  }
+  .syllable-chip.visible { opacity: 1; transform: translateY(0); }
+  .syllable-chip.active { background: var(--blue); }
+
+  .wave-bar {
+    width: 4px;
+    height: 16px;
+    border-radius: 4px;
+    background: var(--blue);
+    transform: scaleY(0.3);
+    transition: background 0.2s;
+  }
+  .syllable-chip.active .wave-bar {
+    background: #fff;
+    animation: waveBounce 0.5s ease-in-out infinite alternate;
+  }
+  .syllable-chip.active .wave-bar:nth-child(1) { animation-delay: 0s;    animation-duration: 0.45s; }
+  .syllable-chip.active .wave-bar:nth-child(2) { animation-delay: 0.1s;  animation-duration: 0.5s; }
+  .syllable-chip.active .wave-bar:nth-child(3) { animation-delay: 0.05s; animation-duration: 0.4s; }
+  .syllable-chip.active .wave-bar:nth-child(4) { animation-delay: 0.15s; animation-duration: 0.55s; }
+  .syllable-chip.active .wave-bar:nth-child(5) { animation-delay: 0.08s; animation-duration: 0.48s; }
+
+  @keyframes waveBounce {
+    from { transform: scaleY(0.25); }
+    to   { transform: scaleY(1); }
+  }
+
+  /* Timer bar */
+  .timer-wrap {
+    margin-bottom: 36px;
+  }
+  .timer-bar-bg {
+    height: 7px;
+    background: #e8eeff;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .timer-bar {
+    height: 100%;
+    background: var(--blue);
+    border-radius: 10px;
+    width: 100%;
+    transition: width 0.1s linear, background 0.3s;
+  }
+  .timer-bar.urgent { background: var(--red); }
+
+  /* Answer cards */
+  .cards-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: 40px;
+  }
+
+  .consonant-card {
+    aspect-ratio: 1;
+    border-radius: var(--radius);
+    border: 2.5px solid #e2e8f8;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s, transform 0.12s;
+    user-select: none;
+    position: relative;
+    overflow: hidden;
+  }
+  .consonant-card:hover:not(.disabled) {
+    border-color: var(--blue);
+    background: var(--blue-light);
+    transform: translateY(-3px);
+  }
+  .consonant-card .jamo {
+    font-family: 'Nanum Gothic', sans-serif;
+    font-size: 64px;
+    font-weight: 800;
+    color: var(--text-dark);
+    line-height: 1;
+  }
+  .consonant-card .card-num {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-light);
+    margin-top: 8px;
+  }
+
+  /* Correct / Wrong states */
+  .consonant-card.correct {
+    border-color: var(--green);
+    background: #edfaf4;
+    animation: correctPop 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .consonant-card.correct .jamo { color: var(--green); }
+
+  .consonant-card.wrong {
+    border-color: var(--red);
+    background: #fff0f0;
+    animation: shake 0.35s ease;
+  }
+  .consonant-card.wrong .jamo { color: var(--red); }
+
+  .consonant-card.reveal {
+    border-color: var(--green);
+    background: #edfaf4;
+  }
+  .consonant-card.reveal .jamo { color: var(--green); }
+
+  .consonant-card.disabled { cursor: default; pointer-events: none; }
+
+  @keyframes correctPop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+    100% { transform: scale(1); }
+  }
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    20% { transform: translateX(-6px); }
+    40% { transform: translateX(6px); }
+    60% { transform: translateX(-4px); }
+    80% { transform: translateX(4px); }
+  }
+
+  /* Score dots */
+  .score-dots {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+  }
+  .dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #e2e8f8;
+    transition: background 0.3s;
+  }
+  .dot.correct { background: var(--green); }
+  .dot.wrong { background: var(--red); }
+
+  /* Result screen */
+  .result-screen {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px 0;
+    gap: 24px;
+  }
+  .result-screen.show { display: flex; }
+
+  .result-emoji { font-size: 72px; }
+  .result-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--text-dark);
+    letter-spacing: -0.02em;
+  }
+  .result-score {
+    font-size: 18px;
+    color: var(--text-mid);
+    font-weight: 500;
+  }
+  .result-score span {
+    color: var(--blue);
+    font-weight: 700;
+    font-size: 22px;
+  }
+  .retry-btn {
+    background: var(--blue);
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    padding: 14px 40px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 4px 16px rgba(74,108,247,0.3);
+    margin-top: 8px;
+  }
+  .retry-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(74,108,247,0.4); }
+
+  /* Feedback overlay on card */
+  .card-feedback {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    font-size: 20px;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .consonant-card.correct .card-feedback,
+  .consonant-card.wrong .card-feedback,
+  .consonant-card.reveal .card-feedback { opacity: 1; }
+
+  /* Timeout message */
+  .timeout-msg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(247,106,106,0.92);
+    color: #fff;
+    font-size: 15px;
+    font-weight: 700;
+    padding: 10px 22px;
+    border-radius: 50px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s;
+    white-space: nowrap;
+    z-index: 10;
+  }
+  .timeout-msg.show { opacity: 1; }
+
+  .game-area { position: relative; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-label">BC1 · Hangul Basic Consonants</div>
+    <div class="progress-badge" id="progressBadge">1 / 4</div>
+  </div>
+
+  <!-- Game area -->
+  <div class="game-area" id="gameArea">
+
+    <div class="instruction">
+      <h1>Listen and catch!</h1>
+      <button class="speaker-btn" id="speakerBtn" onclick="replayAudio()">
+        <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+      </button>
+    </div>
+    <div class="sub-label">TAP SPEAKER TO REPLAY</div>
+
+    <!-- Syllable chips -->
+    <div class="syllable-row" id="syllableRow"></div>
+
+    <!-- Timer -->
+    <div class="timer-wrap">
+      <div class="timer-bar-bg">
+        <div class="timer-bar" id="timerBar"></div>
+      </div>
+    </div>
+
+    <!-- Cards -->
+    <div class="cards-row" id="cardsRow">
+      <div class="consonant-card" onclick="checkAnswer('ㅇ')">
+        <span class="jamo">ㅇ</span>
+        <span class="card-num">1</span>
+        <span class="card-feedback" id="fb-ㅇ"></span>
+      </div>
+      <div class="consonant-card" onclick="checkAnswer('ㄴ')">
+        <span class="jamo">ㄴ</span>
+        <span class="card-num">2</span>
+        <span class="card-feedback" id="fb-ㄴ"></span>
+      </div>
+      <div class="consonant-card" onclick="checkAnswer('ㄹ')">
+        <span class="jamo">ㄹ</span>
+        <span class="card-num">3</span>
+        <span class="card-feedback" id="fb-ㄹ"></span>
+      </div>
+      <div class="consonant-card" onclick="checkAnswer('ㅁ')">
+        <span class="jamo">ㅁ</span>
+        <span class="card-num">4</span>
+        <span class="card-feedback" id="fb-ㅁ"></span>
+      </div>
+    </div>
+
+    <!-- Score dots -->
+    <div class="score-dots" id="scoreDots"></div>
+
+    <div class="timeout-msg" id="timeoutMsg">Time's up!</div>
+  </div>
+
+  <!-- Result screen -->
+  <div class="result-screen" id="resultScreen">
+    <div class="result-emoji" id="resultEmoji"></div>
+    <div class="result-title" id="resultTitle"></div>
+    <div class="result-score" id="resultScore"></div>
+    <button class="retry-btn" onclick="startGame()">Try Again</button>
+  </div>
+
+</div>
+
+<script>
+const BASE_URL = 'https://raw.githubusercontent.com/Ryuu-spec/Hangul-Consonants/main/bagic1/';
+
+// All vowel suffixes and their ㅔ/ㅐ group info
+const VOWELS = [
+  { suffix: 'a',   label: 'ㅏ', group: 0 },
+  { suffix: 'eo',  label: 'ㅓ', group: 0 },
+  { suffix: 'o',   label: 'ㅗ', group: 0 },
+  { suffix: 'u',   label: 'ㅜ', group: 0 },
+  { suffix: 'eu',  label: 'ㅡ', group: 0 },
+  { suffix: 'i',   label: 'ㅣ', group: 0 },
+  { suffix: 'e',   label: 'ㅔ', group: 1 }, // ㅔ/ㅐ group
+  { suffix: 'ae',  label: 'ㅐ', group: 1 }, // ㅔ/ㅐ group
+];
+
+// Consonant prefix map
+const CONSONANTS = [
+  { jamo: 'ㅇ', prefix: '' },   // ㅇ is silent, files: a.mp3, eo.mp3 ...
+  { jamo: 'ㄴ', prefix: 'n' },
+  { jamo: 'ㄹ', prefix: 'r' },
+  { jamo: 'ㅁ', prefix: 'm' },
+];
+
+// Syllable character map (for display)
+const SYLLABLE_CHARS = {
+  '': { a:'아', eo:'어', o:'오', u:'우', eu:'으', i:'이', e:'에', ae:'애' },
+  'n': { a:'나', eo:'너', o:'노', u:'누', eu:'느', i:'니', e:'네', ae:'내' },
+  'r': { a:'라', eo:'러', o:'로', u:'루', eu:'르', i:'리', e:'레', ae:'래' },
+  'm': { a:'마', eo:'머', o:'모', u:'무', eu:'므', i:'미', e:'메', ae:'매' },
+};
+
+// Pick 4 random vowels, ensuring ㅔ and ㅐ don't both appear
+function pickVowels() {
+  let pool = [...VOWELS];
+  let picked = [];
+
+  while (picked.length < 4 && pool.length > 0) {
+    const idx = Math.floor(Math.random() * pool.length);
+    const v = pool[idx];
+    pool.splice(idx, 1);
+
+    // If group 1 already picked, skip
+    if (v.group === 1 && picked.some(p => p.group === 1)) continue;
+    picked.push(v);
+  }
+  return picked;
+}
+
+// Game state
+let questions = [];
+let currentQ = 0;
+let scores = [];
+let timerInterval = null;
+let timerDuration = 6000; // ms
+let timerStart = null;
+let answered = false;
+let currentAudios = [];
+let audioQueue = [];
+let isPlaying = false;
+
+function buildQuestions() {
+  // Shuffle consonants
+  let cons = [...CONSONANTS].sort(() => Math.random() - 0.5);
+  return cons.map(c => ({
+    consonant: c,
+    vowels: pickVowels()
+  }));
+}
+
+function startGame() {
+  questions = buildQuestions();
+  currentQ = 0;
+  scores = [];
+  document.getElementById('gameArea').style.display = 'block';
+  document.getElementById('resultScreen').classList.remove('show');
+  buildScoreDots();
+  loadQuestion();
+}
+
+function buildScoreDots() {
+  const dots = document.getElementById('scoreDots');
+  dots.innerHTML = '';
+  for (let i = 0; i < 4; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot';
+    d.id = 'dot-' + i;
+    dots.appendChild(d);
+  }
+}
+
+function loadQuestion() {
+  answered = false;
+  stopAllAudio();
+
+  const q = questions[currentQ];
+  document.getElementById('progressBadge').textContent = (currentQ + 1) + ' / 4';
+
+  // Reset cards
+  const cards = document.querySelectorAll('.consonant-card');
+  cards.forEach(c => {
+    c.className = 'consonant-card';
+  });
+  document.querySelectorAll('.card-feedback').forEach(f => f.textContent = '');
+
+  // Reset timer
+  document.getElementById('timerBar').style.width = '100%';
+  document.getElementById('timerBar').classList.remove('urgent');
+  document.getElementById('timeoutMsg').classList.remove('show');
+
+  // Build syllable chips
+  showSyllableChips(q);
+
+  // Play audio sequence
+  playAudioSequence(q, () => {
+    startTimer();
+  });
+}
+
+function showSyllableChips(q) {
+  const row = document.getElementById('syllableRow');
+  row.innerHTML = '';
+  q.vowels.forEach((v, i) => {
+    const chip = document.createElement('div');
+    chip.className = 'syllable-chip';
+    chip.id = 'chip-' + i;
+    // 5 wave bars
+    for (let b = 0; b < 5; b++) {
+      const bar = document.createElement('div');
+      bar.className = 'wave-bar';
+      chip.appendChild(bar);
+    }
+    row.appendChild(chip);
+    setTimeout(() => chip.classList.add('visible'), i * 80);
+  });
+}
+
+function getAudioUrl(consonant, vowel) {
+  const filename = consonant.prefix + vowel.suffix + '.mp3';
+  return BASE_URL + filename;
+}
+
+function playAudioSequence(q, onDone) {
+  isPlaying = true;
+  document.getElementById('speakerBtn').classList.add('playing');
+
+  let i = 0;
+  const chips = q.vowels;
+
+  function playNext() {
+    if (i >= chips.length) {
+      isPlaying = false;
+      document.getElementById('speakerBtn').classList.remove('playing');
+      if (onDone) onDone();
+      return;
+    }
+
+    // Highlight chip
+    document.querySelectorAll('.syllable-chip').forEach(c => c.classList.remove('active'));
+    const chip = document.getElementById('chip-' + i);
+    if (chip) chip.classList.add('active');
+
+    const url = getAudioUrl(q.consonant, chips[i]);
+    const audio = new Audio(url);
+    currentAudios.push(audio);
+
+    audio.play().catch(() => {});
+    audio.onended = () => {
+      i++;
+      setTimeout(playNext, 120);
+    };
+    audio.onerror = () => {
+      i++;
+      setTimeout(playNext, 120);
+    };
+  }
+
+  playNext();
+}
+
+function replayAudio() {
+  if (answered) return;
+  stopAllAudio();
+  clearInterval(timerInterval);
+  document.getElementById('timerBar').style.width = '100%';
+  document.getElementById('timerBar').classList.remove('urgent');
+  const q = questions[currentQ];
+  playAudioSequence(q, () => { startTimer(); });
+}
+
+function stopAllAudio() {
+  currentAudios.forEach(a => { try { a.pause(); a.currentTime = 0; } catch(e){} });
+  currentAudios = [];
+  isPlaying = false;
+  document.getElementById('speakerBtn').classList.remove('playing');
+  document.querySelectorAll('.syllable-chip').forEach(c => c.classList.remove('active'));
+}
+
+function startTimer() {
+  if (answered) return;
+  clearInterval(timerInterval);
+  timerStart = Date.now();
+  const bar = document.getElementById('timerBar');
+  bar.classList.remove('urgent');
+
+  timerInterval = setInterval(() => {
+    const elapsed = Date.now() - timerStart;
+    const pct = Math.max(0, 100 - (elapsed / timerDuration) * 100);
+    bar.style.width = pct + '%';
+    if (pct < 30) bar.classList.add('urgent');
+    if (pct <= 0) {
+      clearInterval(timerInterval);
+      onTimeout();
+    }
+  }, 50);
+}
+
+function onTimeout() {
+  if (answered) return;
+  answered = true;
+  stopAllAudio();
+
+  scores.push(false);
+  document.getElementById('dot-' + currentQ).classList.add('wrong');
+
+  // Reveal correct answer
+  const correct = questions[currentQ].consonant.jamo;
+  const cards = document.querySelectorAll('.consonant-card');
+  cards.forEach(c => {
+    c.classList.add('disabled');
+    if (c.querySelector('.jamo').textContent === correct) {
+      c.classList.add('reveal');
+      c.querySelector('.card-feedback').textContent = '✓';
+    }
+  });
+
+  document.getElementById('timeoutMsg').classList.add('show');
+  setTimeout(() => {
+    document.getElementById('timeoutMsg').classList.remove('show');
+    nextQuestion();
+  }, 1400);
+}
+
+function checkAnswer(jamo) {
+  if (answered) return;
+  answered = true;
+  clearInterval(timerInterval);
+  stopAllAudio();
+
+  const correct = questions[currentQ].consonant.jamo;
+  const isCorrect = jamo === correct;
+
+  scores.push(isCorrect);
+  document.getElementById('dot-' + currentQ).classList.add(isCorrect ? 'correct' : 'wrong');
+
+  // Update cards
+  const cards = document.querySelectorAll('.consonant-card');
+  cards.forEach(c => {
+    c.classList.add('disabled');
+    const j = c.querySelector('.jamo').textContent;
+    const fb = c.querySelector('.card-feedback');
+    if (j === jamo && isCorrect) { c.classList.add('correct'); fb.textContent = '✓'; }
+    else if (j === jamo && !isCorrect) { c.classList.add('wrong'); fb.textContent = '✗'; }
+    else if (j === correct && !isCorrect) { c.classList.add('reveal'); fb.textContent = '✓'; }
+  });
+
+  setTimeout(nextQuestion, isCorrect ? 900 : 1200);
+}
+
+function nextQuestion() {
+  currentQ++;
+  if (currentQ >= 4) {
+    showResult();
+  } else {
+    loadQuestion();
+  }
+}
+
+function showResult() {
+  document.getElementById('gameArea').style.display = 'none';
+  const screen = document.getElementById('resultScreen');
+  screen.classList.add('show');
+
+  const correct = scores.filter(Boolean).length;
+  const emojis = ['😅', '🙂', '😊', '🎉', '🏆'];
+  document.getElementById('resultEmoji').textContent = emojis[correct];
+  const titles = ['Keep going!', 'Good try!', 'Nice work!', 'Great job!', 'Perfect!'];
+  document.getElementById('resultTitle').textContent = titles[correct];
+  document.getElementById('resultScore').innerHTML = 'You got <span>' + correct + ' / 4</span> correct';
+}
+
+// Start on load
+window.onload = startGame;
+</script>
+</body>
+</html>
